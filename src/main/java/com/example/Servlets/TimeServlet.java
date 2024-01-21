@@ -17,20 +17,10 @@ public class TimeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-        String reqQueryString = req.getQueryString();
-        String timezone = null;
-
-        if (reqQueryString != null) {
-            String[] timezoneParams = reqQueryString.split("=");
-            if (timezoneParams.length == 2) {
-                timezone = timezoneParams[1];
-            }
-        }
         resp.setContentType("text/html;charset=UTF-8");
-
+        String timezone = req.getParameter("timezone");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss zzz");
         ZonedDateTime zonedDateTime;
-
         try (PrintWriter out = resp.getWriter()){
             if (timezone == null || timezone.isEmpty()) {
                 zonedDateTime = ZonedDateTime.now(ZoneId.of("UTC"));

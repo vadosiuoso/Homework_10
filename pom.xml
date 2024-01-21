@@ -33,10 +33,24 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-catalina</artifactId>
+      <version>10.1.18</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-core</artifactId>
+      <version>10.1.18</version>
+    </dependency>
+
   </dependencies>
 
   <build>
     <finalName>Homework_10</finalName>
+
+
   </build>
 
 </project>

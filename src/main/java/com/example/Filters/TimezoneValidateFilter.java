@@ -25,30 +25,24 @@ public class TimezoneValidateFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-           if(servletRequest instanceof HttpServletRequest){
-               HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-               String reqQueryString = httpServletRequest.getQueryString();
-               String timezone;
-               if (reqQueryString != null) {
-                   String[] timezoneParams = reqQueryString.split("=");
-                   if (timezoneParams.length == 2) {
-                       timezone = timezoneParams[1];
-                       try{
-                           ZoneId zone = ZoneId.of(timezone);
-                           filterChain.doFilter(servletRequest,servletResponse);
-                       }catch (DateTimeException e){
-                           if(servletResponse instanceof HttpServletResponse){
-                               HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
-                               httpServletResponse.setStatus(400);
-                           }
-                           PrintWriter printWriter = servletResponse.getWriter();
-                           printWriter.println("Invalid timezone");
-                       }
-                   }
-               }else {
-                   filterChain.doFilter(servletRequest,servletResponse);
-               }
-           }
+        String timezone = servletRequest.getParameter("timezone");
+        if (timezone == null || timezone.isEmpty()) {
+            filterChain.doFilter(servletRequest, servletResponse);
+        }else {
+            try {
+                ZoneId zone = ZoneId.of(timezone);
+                filterChain.doFilter(servletRequest, servletResponse);
+            } catch (DateTimeException e) {
+                if (servletResponse instanceof HttpServletResponse) {
+                    HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+                    httpServletResponse.setStatus(400);
+                    PrintWriter printWriter = servletResponse.getWriter();
+                    printWriter.println("Invalid timezone");
+                } else {
+                    filterChain.doFilter(servletRequest, servletResponse);
+                }
+            }
+        }
     }
 
     @Override
