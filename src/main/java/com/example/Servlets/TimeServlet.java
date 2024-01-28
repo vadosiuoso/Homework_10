@@ -16,7 +16,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 
-
 @WebServlet(urlPatterns = "/time")
 public class TimeServlet extends HttpServlet {
     private TemplateEngine engine;
@@ -40,20 +39,22 @@ public class TimeServlet extends HttpServlet {
         try (PrintWriter out = resp.getWriter()){
             if (timezone == null || timezone.isEmpty()) {
                 Cookie[] cookies = req.getCookies();
-                for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals("lastTimezone")) {
-                        timezone = cookie.getValue();
-                        zonedDateTime = ZonedDateTime.now(ZoneId.of(timezone));
-                    } else {
-                        zonedDateTime = ZonedDateTime.now(ZoneId.of("UTC"));
+                if(cookies != null){
+                    for (Cookie cookie : cookies) {
+                        if (cookie.getName().equals("lastTimezone")) {
+                            timezone = cookie.getValue();
+                            zonedDateTime = ZonedDateTime.now(ZoneId.of(timezone));
+                        }
                     }
+                } else {
+                    timezone = "UTC";
+                    zonedDateTime = ZonedDateTime.now(ZoneId.of(timezone));
                 }
             } else {
                 resp.addCookie(new Cookie("lastTimezone", timezone));
                 zonedDateTime = ZonedDateTime.now(ZoneId.of(timezone));
             }
             Context context = new Context();
-
             assert zonedDateTime != null;
             String time = zonedDateTime.format(formatter);
             context.setVariable("currentTime", time);
