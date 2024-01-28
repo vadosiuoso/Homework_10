@@ -32,7 +32,7 @@ public class TimeServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)  {
         String timezone = req.getParameter("timezone");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss zzz");
         ZonedDateTime zonedDateTime = null;
